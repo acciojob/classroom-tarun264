@@ -10,7 +10,7 @@ import java.util.List;
 public class StudentRepository {
     HashMap<String,Teacher> teacherDb= new HashMap<>();
     HashMap<String,Student> studentDb= new HashMap<>();
-    HashMap<String,String> teacherStudentDb= new HashMap<>();
+
     HashMap<String, List<String>> teacherStudentPairDB= new HashMap<>();
 
     public void addStudent(Student student) {
@@ -24,11 +24,9 @@ public class StudentRepository {
     }
 
     public void adStudentTeacherPair(String student, String teacher) {
-        if(teacherDb.containsKey(teacher) && studentDb.containsKey(student)){
-            teacherStudentDb.put(teacher,student);
-        }
+
         List<String> studentsList= new ArrayList<>();
-        if(!studentsList.contains(student)) {
+        if(!studentsList.contains(student) && studentsList.size()<=teacherDb.get(teacher).getNumberOfStudents()) {
             studentsList.add(student);
             teacherStudentPairDB.put(teacher, studentsList);
         }
@@ -61,13 +59,8 @@ public class StudentRepository {
     public List<String> getAllStudents() {
         if(teacherStudentPairDB.isEmpty()) return null;
 
-        List<String> getAllStudent= new ArrayList<>();
+        List<String> getAllStudent= new ArrayList<>(studentDb.keySet());
 
-        for(String teachers:teacherStudentPairDB.keySet()){
-            for(String students: teacherStudentPairDB.get(teachers)){
-                getAllStudent.add(students);
-            }
-        }
         return getAllStudent;
     }
 
@@ -77,20 +70,13 @@ public class StudentRepository {
             teacherDb.remove(teacher);
         }
 
-            if(teacherStudentDb.containsKey(teacher)) {
-                teacherStudentDb.remove(teacher);
-            }
-                for(String teachers: teacherStudentPairDB.keySet()){
-                    if(teachers.equals(teacher)){
-                        teacherStudentPairDB.remove(teachers);
-                    }
-                }
+        teacherStudentPairDB.remove(teacher);
             }
 
     public void deleteAllTeachers() {
         teacherDb.clear();
         teacherStudentPairDB.clear();
-        teacherStudentDb.clear();
+
     }
 }
 
