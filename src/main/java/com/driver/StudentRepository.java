@@ -24,13 +24,17 @@ public class StudentRepository {
     }
 
     public void adStudentTeacherPair(String student, String teacher) {
-
-        List<String> studentsList= new ArrayList<>();
-        if(!studentsList.contains(student) && studentsList.size()<=teacherDb.get(teacher).getNumberOfStudents()) {
-            studentsList.add(student);
-            teacherStudentPairDB.put(teacher, studentsList);
+        List<String> studentList= new ArrayList<>();
+        if(teacherStudentPairDB.containsKey(teacher)) {
+            studentList = teacherStudentPairDB.get(teacher);
         }
-    }
+        if(!studentList.contains(student)){
+            studentList.add(student);
+        }
+        teacherStudentPairDB.put(teacher,studentList);
+
+        }
+
 
     public Student getStudent(String name) {
         if(!studentDb.containsKey(name)){
@@ -66,14 +70,27 @@ public class StudentRepository {
 
 
     public void deleteTeacherByName(String teacher) {
-        if(teacherDb.containsKey(teacher)) {
-            teacherDb.remove(teacher);
+        teacherDb.remove(teacher);
+
+        for(String findTeacher: teacherStudentPairDB.keySet()){
+            List<String> studentList= new ArrayList<>();
+            if(findTeacher.equals(teacher)){
+                studentList=teacherStudentPairDB.get(findTeacher);
+                    for(String st: studentList){
+                        studentDb.remove(st);
+                    }
+                }
+            }
+            teacherStudentPairDB.remove(teacher);
         }
 
-        teacherStudentPairDB.remove(teacher);
-            }
-
     public void deleteAllTeachers() {
+        for(String findTeacher: teacherStudentPairDB.keySet()){
+            List<String> studentList= teacherStudentPairDB.get(findTeacher);
+                for(String st: studentList){
+                    studentDb.remove(st);
+                }
+            }
         teacherDb.clear();
         teacherStudentPairDB.clear();
 

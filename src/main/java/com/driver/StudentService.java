@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -28,6 +29,7 @@ public class StudentService {
 
     public Teacher getTeacherByName(String name) {
         return studentRepository.getTeacherByName(name);
+
     }
 
     public List<String> getAllStudentsByTeacherName(String teacher) {
